@@ -3,6 +3,7 @@
         <file alias="icebergcoin">res/icons/icebergcoin.png</file>
         <file alias="drmbg">res/icons/icebergcoin-256.png</file>
         <file alias="address-book">res/icons/address-book.png</file>
+		<file alias="trading">res/icons/trade.png</file>
         <file alias="quit">res/icons/quit.png</file>
         <file alias="send">res/icons/send.png</file>
         <file alias="toolbar">res/icons/icebergcoin-16.png</file>

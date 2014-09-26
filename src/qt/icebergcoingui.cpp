@@ -8,6 +8,7 @@
 #include "transactiontablemodel.h"
 #include "addressbookpage.h"
 #include "sendcoinsdialog.h"
+#include "tradingdialog.h"
 #include "signverifymessagedialog.h"
 #include "optionsdialog.h"
 #include "aboutdialog.h"
@@ -56,7 +57,7 @@
 #include <QDragEnterEvent>
 #include <QUrl>
 #include <QStyle>
-
+#include <QDebug>
 #include <iostream>
 
 extern CWallet* pwalletMain;
@@ -135,6 +136,8 @@ IcebergcoinGUI::IcebergcoinGUI(QWidget *parent):
     sendCoinsPage = new SendCoinsDialog(this);
 
     signVerifyMessageDialog.reset(new SignVerifyMessageDialog);
+	
+	tradingDialogPage = new tradingDialog(this);
 
     centralWidget = new QStackedWidget(this);
     centralWidget->addWidget(overviewPage);
@@ -142,6 +145,7 @@ IcebergcoinGUI::IcebergcoinGUI(QWidget *parent):
     centralWidget->addWidget(addressBookPage);
     centralWidget->addWidget(receiveCoinsPage);
     centralWidget->addWidget(sendCoinsPage);
+	centralWidget->addWidget(tradingDialogPage);
     setCentralWidget(centralWidget);
 
     // Create status bar
@@ -202,6 +206,8 @@ IcebergcoinGUI::IcebergcoinGUI(QWidget *parent):
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), this, SLOT(gotoHistoryPage()));
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
 
+	connect(TradingAction, SIGNAL(triggered()), tradingDialogPage, SLOT(InitTrading()));
+	
     // Double-clicking on a transaction on the transaction history page shows details
     connect(transactionView, SIGNAL(doubleClicked(QModelIndex)), transactionView, SLOT(showDetails()));
 
@@ -259,6 +265,12 @@ void IcebergcoinGUI::createActions()
     addressBookAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_5));
     tabGroup->addAction(addressBookAction);
 
+	TradingAction = new QAction(QIcon(":/icons/trading"), tr("&Trade"), this);
+    TradingAction ->setToolTip(tr("Start Trading"));
+    TradingAction ->setCheckable(true);
+    TradingAction ->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
+    tabGroup->addAction(TradingAction);
+	
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
     connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -269,6 +281,7 @@ void IcebergcoinGUI::createActions()
     connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
     connect(addressBookAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(addressBookAction, SIGNAL(triggered()), this, SLOT(gotoAddressBookPage()));
+	connect(TradingAction, SIGNAL(triggered()), this, SLOT(gotoTradingPage()));
 
     quitAction = new QAction(QIcon(":/icons/quit"), tr("E&xit"), this);
     quitAction->setToolTip(tr("Quit application"));
@@ -360,6 +373,7 @@ void IcebergcoinGUI::createToolBars()
     toolbar->addAction(receiveCoinsAction);
     toolbar->addAction(historyAction);
     toolbar->addAction(addressBookAction);
+	toolbar->addAction(TradingAction);
     toolbar->setMovable(false);
 
     QToolBar *toolbar2 = addToolBar(tr("Actions toolbar"));
@@ -762,6 +776,16 @@ void IcebergcoinGUI::gotoSendCoinsPage()
 
     exportAction->setEnabled(false);
     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+}
+
+void IcebergcoinGUI::gotoTradingPage()
+{
+
+     TradingAction->setChecked(true);
+     centralWidget->setCurrentWidget(tradingDialogPage);
+
+  //  exportAction->setEnabled(false);
+  //  disconnect(exportAction, SIGNAL(triggered()), 0, 0);
 }
 
 void IcebergcoinGUI::gotoSignMessageTab(QString addr)

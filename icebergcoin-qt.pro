@@ -186,6 +186,7 @@ HEADERS += src/qt/icebergcoingui.h \
     src/qt/aboutdialog.h \
     src/qt/editaddressdialog.h \
     src/qt/icebergcoinaddressvalidator.h \
+	src/qt/tradingdialog.h \
     src/alert.h \
     src/addrman.h \
     src/base58.h \
@@ -290,6 +291,7 @@ SOURCES += src/qt/icebergcoin.cpp src/qt/icebergcoingui.cpp \
     src/qt/aboutdialog.cpp \
     src/qt/editaddressdialog.cpp \
     src/qt/icebergcoinaddressvalidator.cpp \
+	src/qt/tradingdialog.cpp \
     src/alert.cpp \
     src/version.cpp \
     src/sync.cpp \
@@ -372,7 +374,8 @@ FORMS += \
     src/qt/forms/sendcoinsentry.ui \
     src/qt/forms/askpassphrasedialog.ui \
     src/qt/forms/rpcconsole.ui \
-    src/qt/forms/optionsdialog.ui
+    src/qt/forms/optionsdialog.ui \
+	src/qt/forms/tradingdialog.ui
 
 contains(USE_QRCODE, 1) {
 HEADERS += src/qt/qrcodedialog.h
